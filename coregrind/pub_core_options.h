@@ -67,14 +67,14 @@ extern Int  VG_(clo_show_error_list);
    default: no markers. */
 extern HChar *VG_(clo_error_markers)[2];
 
-typedef 
-   enum { 
+typedef
+   enum {
       Vg_VgdbNo,   // Do not activate gdbserver.
       Vg_VgdbYes,  // Activate gdbserver (default).
       Vg_VgdbFull, // ACtivate gdbserver in full mode, allowing
                    // a precise handling of watchpoints and single stepping
                    // at any moment.
-   } 
+   }
    VgVgdb;
 /* if != Vg_VgdbNo, allows valgrind to serve vgdb/gdb. */
 extern VgVgdb VG_(clo_vgdb);
@@ -145,6 +145,9 @@ extern const HChar *VG_(clo_xml_fname_unexpanded);
 
 /* Add timestamps to log messages?  default: NO */
 extern Bool  VG_(clo_time_stamp);
+
+/* Print timestamps as wall-clock time?  default: NO */
+extern Bool  VG_(clo_wall_clock);
 
 /* The file descriptor to read for input.  default: 0 == stdin */
 extern Int   VG_(clo_input_fd);
@@ -265,7 +268,7 @@ extern Bool VG_(clo_read_var_info);
 /* Which prefix to strip from full source file paths, if any. */
 extern const HChar* VG_(clo_prefix_to_strip);
 
-/* An array of strings harvested from --require-text-symbol= 
+/* An array of strings harvested from --require-text-symbol=
    flags.
 
    Each string specifies a pair: a soname pattern and a text symbol
@@ -341,11 +344,11 @@ extern UInt VG_(clo_num_transtab_sectors);
    provided default. */
 extern UInt VG_(clo_avg_transtab_entry_size);
 
-/* Only client requested fixed mapping can be done below 
+/* Only client requested fixed mapping can be done below
    VG_(clo_aspacem_minAddr). */
 extern Addr VG_(clo_aspacem_minAddr);
 
-/* How large the Valgrind thread stacks should be. 
+/* How large the Valgrind thread stacks should be.
    Will be rounded up to a page.. */
 extern Word VG_(clo_valgrind_stacksize);
 
@@ -355,15 +358,15 @@ extern Bool VG_(clo_wait_for_gdb);
 /* To what extent should self-checking translations be made?  These
    are needed to deal with self-modifying code on uncooperative
    platforms. */
-typedef 
-   enum { 
+typedef
+   enum {
       Vg_SmcNone,  // never generate self-checking translations
       Vg_SmcStack, // generate s-c-t's for code found in stacks
                    // (this is the default)
       Vg_SmcAll,   // make all translations self-checking.
       Vg_SmcAllNonFile // make all translations derived from
                    // non-file-backed memory self checking
-   } 
+   }
    VgSmc;
 
 /* Describe extent to which self-modifying-code should be

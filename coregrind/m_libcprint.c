@@ -3,12 +3,12 @@
 /*--------------------------------------------------------------------*/
 /*--- Libc printing.                                 m_libcprint.c ---*/
 /*--------------------------------------------------------------------*/
- 
+
 /*
    This file is part of Valgrind, a dynamic binary instrumentation
    framework.
 
-   Copyright (C) 2000-2017 Julian Seward 
+   Copyright (C) 2000-2017 Julian Seward
       jseward@acm.org
 
    This program is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ static void xml_arg(const HChar *unsanitised_arg)
 static void print_file_vars(const HChar *format)
 {
    UInt i = 0;
-   
+
    while (format[i]) {
       if (format[i] == '%') {
          // We saw a '%'.  What's next...
@@ -168,7 +168,7 @@ void VG_(print_preamble)(Bool logging_to_fd)
       /* Tool details */
       umsg_or_xml(VG_(clo_xml) ? "%s%pS%pS%pS, %pS%s\n" : "%s%s%s%s, %s%s\n",
                   xpre,
-                  VG_(details).name, 
+                  VG_(details).name,
                   NULL == VG_(details).version ? "" : "-",
                   NULL == VG_(details).version ? "" : VG_(details).version,
                   VG_(details).description,
@@ -194,7 +194,7 @@ void VG_(print_preamble)(Bool logging_to_fd)
       // favour utility and simplicity over aesthetics.
       umsg_or_xml("%sCommand: ", xpre);
       umsg_or_xml_arg(VG_(args_the_exename));
-          
+
       for (UInt i = 0; i < VG_(sizeXA)( VG_(args_for_client)); i++) {
          HChar *s = *(HChar **)VG_(indexXA)( VG_(args_for_client), i);
          umsg_or_xml(" ");
@@ -265,8 +265,8 @@ void VG_(print_preamble)(Bool logging_to_fd)
          VG_(message)(Vg_DebugMsg, "\n");
       VG_(message)(Vg_DebugMsg, "Valgrind options:\n");
       for (UInt i = 0; i < VG_(sizeXA)( VG_(args_for_valgrind) ); i++) {
-         VG_(message)(Vg_DebugMsg, 
-                     "   %s\n", 
+         VG_(message)(Vg_DebugMsg,
+                     "   %s\n",
                      *(HChar **) VG_(indexXA)( VG_(args_for_valgrind), i));
       }
 
@@ -318,14 +318,14 @@ void VG_(print_preamble)(Bool logging_to_fd)
 
       VG_(machine_get_VexArchInfo)(&vex_arch, &vex_archinfo);
       VG_(message)(
-         Vg_DebugMsg, 
+         Vg_DebugMsg,
          "Arch and hwcaps: %s, %s, %s\n",
          LibVEX_ppVexArch    ( vex_arch ),
          LibVEX_ppVexEndness ( vex_archinfo.endness ),
          LibVEX_ppVexHwCaps  ( vex_arch, vex_archinfo.hwcaps )
       );
-      VG_(message)(Vg_DebugMsg, 
-                  "Page sizes: currently %u, max supported %u\n", 
+      VG_(message)(Vg_DebugMsg,
+                  "Page sizes: currently %u, max supported %u\n",
                   (UInt) VKI_PAGE_SIZE, (UInt) VKI_MAX_PAGE_SIZE);
       VG_(message)(Vg_DebugMsg,
                    "Valgrind library directory: %s\n", VG_(libdir));
@@ -339,7 +339,7 @@ void VG_(print_preamble)(Bool logging_to_fd)
 /* The destination sinks for normal and XML output.  These have their
    initial values here; they are set to final values by
    m_main.main_process_cmd_line_options().  See comment at the top of
-   that function for the associated logic. 
+   that function for the associated logic.
    After startup, the gdbserver monitor command might temporarily
    set the fd of log_output_sink to -2 to indicate that output is
    to be given to gdb rather than output to the startup fd */
@@ -365,8 +365,8 @@ static Int prepare_sink_fd(const HChar *clo_fname_unexpanded, OutputSink *sink,
    HChar *logfilename = VG_(expand_file_name)(
                                          (is_xml) ? "--xml-file" : "--log-file",
                                          clo_fname_unexpanded);
-   SysRes sres = VG_(open)(logfilename, 
-                           VKI_O_CREAT|VKI_O_WRONLY|VKI_O_TRUNC, 
+   SysRes sres = VG_(open)(logfilename,
+                           VKI_O_CREAT|VKI_O_WRONLY|VKI_O_TRUNC,
                            VKI_S_IRUSR|VKI_S_IWUSR|VKI_S_IRGRP|VKI_S_IROTH);
    if (!sr_isError(sres)) {
       Int fd = sr_Res(sres);
@@ -374,7 +374,7 @@ static Int prepare_sink_fd(const HChar *clo_fname_unexpanded, OutputSink *sink,
       sink->type = VgLogTo_File;
       return fd;
    } else {
-      VG_(fmsg)("Cannot create %s file '%s': %s\n", 
+      VG_(fmsg)("Cannot create %s file '%s': %s\n",
                 (is_xml) ? "XML" : "log", logfilename,
                 VG_(strerror)(sr_Err(sres)));
       VG_(exit)(1);
@@ -521,7 +521,7 @@ void VG_(init_log_xml_sinks)(VgLogTo log_to, VgLogTo xml_to,
 
    /* --- set up the normal text output channel --- */
    switch (log_to) {
-      case VgLogTo_Fd: 
+      case VgLogTo_Fd:
          vg_assert(VG_(clo_log_fname_unexpanded) == NULL);
          break;
 
@@ -538,7 +538,7 @@ void VG_(init_log_xml_sinks)(VgLogTo log_to, VgLogTo xml_to,
 
    /* --- set up the XML output channel --- */
    switch (xml_to) {
-      case VgLogTo_Fd: 
+      case VgLogTo_Fd:
          vg_assert(VG_(clo_xml_fname_unexpanded) == NULL);
          break;
 
@@ -620,12 +620,12 @@ void send_bytes_to_logging_sink ( OutputSink* sink, const HChar* msg, Int nbytes
 
 /* --------- printf --------- */
 
-typedef 
+typedef
    struct {
       HChar       buf[512];
       Int         buf_used;
       OutputSink* sink;
-   } 
+   }
    printf_buf_t;
 
 // Adds a single char to the buffer.  When the buffer gets sufficiently
@@ -633,7 +633,7 @@ typedef
 static void add_to__printf_buf ( HChar c, void *p )
 {
    printf_buf_t *b = (printf_buf_t *)p;
-   
+
    if (b->buf_used > sizeof(b->buf) - 2 ) {
       send_bytes_to_logging_sink( b->sink, b->buf, b->buf_used );
       b->buf_used = 0;
@@ -648,7 +648,7 @@ static UInt vprintf_to_buf ( printf_buf_t* b,
 {
    UInt ret = 0;
    if (b->sink->fd >= 0 || b->sink->fd == -2) {
-      ret = VG_(debugLog_vprintf) 
+      ret = VG_(debugLog_vprintf)
                ( add_to__printf_buf, b, format, vargs );
    }
    return ret;
@@ -737,7 +737,7 @@ UInt VG_(vsprintf) ( HChar* buf, const HChar *format, va_list vargs )
    Int ret;
    HChar* sprintf_ptr = buf;
 
-   ret = VG_(debugLog_vprintf) 
+   ret = VG_(debugLog_vprintf)
             ( add_to__sprintf_buf, &sprintf_ptr, format, vargs );
    add_to__sprintf_buf('\0', &sprintf_ptr);
 
@@ -770,12 +770,12 @@ UInt VG_(sprintf) ( HChar* buf, const HChar *format, ... )
              to the buffer followed by the terminating null character.
 */
 
-typedef 
+typedef
    struct {
       HChar* buf;
       Int    buf_size;
       Int    buf_used;
-   } 
+   }
    snprintf_buf_t;
 
 static void add_to__snprintf_buf ( HChar c, void* p )
@@ -787,7 +787,7 @@ static void add_to__snprintf_buf ( HChar c, void* p )
          b->buf[b->buf_used] = 0;
       else
          b->buf[b->buf_size-1] = 0; /* pre: b->buf_size > 0 */
-   } 
+   }
 }
 
 UInt VG_(vsnprintf) ( HChar* buf, Int size, const HChar *format, va_list vargs )
@@ -798,7 +798,7 @@ UInt VG_(vsnprintf) ( HChar* buf, Int size, const HChar *format, va_list vargs )
    b.buf_used = 0;
    if (b.buf_size > 0)
       b.buf[0] = 0; // ensure to null terminate buf if empty format
-   (void) VG_(debugLog_vprintf) 
+   (void) VG_(debugLog_vprintf)
              ( add_to__snprintf_buf, &b, format, vargs );
 
    return b.buf_used;
@@ -929,6 +929,30 @@ void VG_(elapsed_wallclock_time) ( /*OUT*/HChar* buf, SizeT bufsize )
 }
 
 
+void VG_(wallclock_time) ( /*OUT*/HChar* buf, SizeT bufsize )
+{
+   vg_assert(bufsize > 20);
+
+   struct vki_timeval tv_now;
+   struct vki_timezone tz_now;
+   VG_(gettimeofday)(&tv_now, &tz_now);
+
+   UInt t, s, m, h;
+   t=tv_now.tv_sec;
+
+   s = t % 60;
+   t /= 60; /* now in minutes */
+
+   t -= tz_now.tz_minuteswest;   /* delta vs gmt  (maybe) */
+
+   m = t % 60;
+   t /= 60; /* now in hours */
+
+   h = t % 24;
+
+   VG_(sprintf)(buf, "%02d:%02d:%02d.%06ld ", h, m, s, tv_now.tv_usec);
+}
+
 /* ---------------------------------------------------------------------
    message()
    ------------------------------------------------------------------ */
@@ -942,7 +966,7 @@ void VG_(elapsed_wallclock_time) ( /*OUT*/HChar* buf, SizeT bufsize )
    * Whenever the first character on a line is emitted, the
      ==PID== style preamble is stuffed in before it.
 */
-typedef 
+typedef
    struct {
       HChar buf[512+128];
       Int   buf_used;
@@ -952,7 +976,7 @@ typedef
       VgMsgKind kind;
       /* destination */
       OutputSink* sink;
-   } 
+   }
    vmessage_buf_t;
 
 static vmessage_buf_t vmessage_buf
@@ -982,7 +1006,7 @@ static void add_to__vmessage_buf ( HChar c, void *p )
       // (useful to run regression tests in an outer/inner setup
       // and avoid the diff failing due to these unexpected '>').
       depth = RUNNING_ON_VALGRIND;
-      if (depth > 0 
+      if (depth > 0
           && !SimHintiS(SimHint_no_inner_prefix, VG_(clo_sim_hints))) {
          if (depth > 10)
             depth = 10; // ?!?!
@@ -1014,8 +1038,13 @@ static void add_to__vmessage_buf ( HChar c, void *p )
          b->buf[b->buf_used++] = ch;
          b->buf[b->buf_used++] = ch;
 
-         if (VG_(clo_time_stamp)) {
-            VG_(elapsed_wallclock_time)(tmp, sizeof tmp);
+         if (VG_(clo_time_stamp) || (VG_(clo_wall_clock))) {
+            if (VG_(clo_wall_clock)) {
+               VG_(wallclock_time)(tmp, sizeof tmp);
+            }
+            else {
+               VG_(elapsed_wallclock_time)(tmp, sizeof tmp);
+            }
             for (i = 0; tmp[i]; i++)
                b->buf[b->buf_used++] = tmp[i];
          }
@@ -1037,7 +1066,7 @@ static void add_to__vmessage_buf ( HChar c, void *p )
 
    b->buf[b->buf_used++] = c;
    b->buf[b->buf_used]   = 0;
-   
+
    if (b->buf_used >= sizeof(b->buf) - 128) {
       send_bytes_to_logging_sink( b->sink, b->buf, b->buf_used );
       b->buf_used = 0;
@@ -1153,7 +1182,7 @@ UInt VG_(dmsg) ( const HChar* format, ... )
    return count;
 }
 
-/* Flush any output that has accumulated in vmessage_buf as a 
+/* Flush any output that has accumulated in vmessage_buf as a
    result of previous calls to VG_(message) et al. */
 void VG_(message_flush) ( void )
 {

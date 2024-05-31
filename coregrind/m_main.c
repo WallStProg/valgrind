@@ -116,6 +116,7 @@ static void usage_NORETURN ( int need_help )
 "    --track-fds=no|yes|all    track open file descriptors? [no]\n"
 "                              all includes reporting stdin, stdout and stderr\n"
 "    --time-stamp=no|yes       add timestamps to log messages? [no]\n"
+"    --wall-clock=no|yes       print timestamp as wall clock time? [no]\n"
 "    --log-fd=<number>         log messages to file descriptor [2=stderr]\n"
 "    --log-file=<file>         log messages to <file>\n"
 "    --log-socket=ipaddr:port  log messages to socket ipaddr:port\n"
@@ -634,6 +635,7 @@ static void process_option (Clo_Mode mode,
    else if VG_BOOL_CLO(arg, "--enable-debuginfod", VG_(clo_enable_debuginfod)) {}
 #endif
    else if VG_BOOL_CLOM(cloPD, arg, "--time-stamp",       VG_(clo_time_stamp)) {}
+   else if VG_BOOL_CLO(arg, "--wall-clock",       VG_(clo_wall_clock)) {}
    else if VG_STR_CLO(arg, "--track-fds",         tmp_str) {
       if (VG_(strcmp)(tmp_str, "yes") == 0)
          VG_(clo_track_fds) = 1;
