@@ -64,7 +64,7 @@ VgVgdb VG_(clo_vgdb)           = Vg_VgdbNo; // currently disabled on Android
 #else
 VgVgdb VG_(clo_vgdb)           = Vg_VgdbYes;
 #endif
-Int    VG_(clo_vgdb_poll)      = 5000; 
+Int    VG_(clo_vgdb_poll)      = 5000;
 Int    VG_(clo_vgdb_error)     = 999999999;
 UInt   VG_(clo_vgdb_stop_at)   = 0;
 const HChar *VG_(clo_vgdb_prefix)    = NULL;
@@ -86,6 +86,7 @@ Bool   VG_(clo_child_silent_after_fork) = False;
 const HChar *VG_(clo_log_fname_unexpanded) = NULL;
 const HChar *VG_(clo_xml_fname_unexpanded) = NULL;
 Bool   VG_(clo_time_stamp)     = False;
+Bool   VG_(clo_wall_clock)     = False;
 Int    VG_(clo_input_fd)       = 0; /* stdin */
 Bool   VG_(clo_default_supp)   = True;
 XArray *VG_(clo_suppressions);   // array of strings
@@ -187,13 +188,13 @@ HChar* VG_(expand_file_name)(const HChar* option_name, const HChar* format)
       message = "No filename given\n";
       goto bad;
    }
-   
+
    // If 'format' starts with a '~', abort -- the user probably expected the
    // shell to expand but it didn't (see bug 195268 for details).  This means
    // that we don't allow a legitimate filename beginning with '~' but that
    // seems very unlikely.
    if (format[0] == '~') {
-      message = 
+      message =
          "Filename begins with '~'\n"
          "You probably expected the shell to expand the '~', but it\n"
          "didn't.  The rules for '~'-expansion vary from shell to shell.\n"
@@ -214,7 +215,7 @@ HChar* VG_(expand_file_name)(const HChar* option_name, const HChar* format)
       if (format[i] != '%') {
          ENSURE_THIS_MUCH_SPACE(1);
          out[j++] = format[i++];
-         
+
       } else {
          // We saw a '%'.  What's next...
          i++;
@@ -230,7 +231,7 @@ HChar* VG_(expand_file_name)(const HChar* option_name, const HChar* format)
             ENSURE_THIS_MUCH_SPACE(10);
             j += VG_(sprintf)(&out[j], "%d", pid);
             i++;
-         } 
+         }
          else if ('n' == format[i]) {
             // Print a seq nr.
             static Int last_pid;
@@ -243,7 +244,7 @@ HChar* VG_(expand_file_name)(const HChar* option_name, const HChar* format)
             ENSURE_THIS_MUCH_SPACE(10);
             j += VG_(sprintf)(&out[j], "%d", seq_nr);
             i++;
-         } 
+         }
          else if ('q' == format[i]) {
             i++;
             if ('{' == format[i]) {
@@ -283,7 +284,7 @@ HChar* VG_(expand_file_name)(const HChar* option_name, const HChar* format)
                message = "Expected '{' after '%q'\n";
                goto bad;
             }
-         } 
+         }
          else {
             // Something else, abort.
             message = "Expected 'p' or 'q' or '%' after '%'\n";
@@ -385,7 +386,7 @@ Bool VG_(should_we_trace_this_child) ( const HChar* child_exe_name,
    }
 
    // Check if any of the args match any of the patterns specified
-   // by --trace-children-skip-by-arg=. 
+   // by --trace-children-skip-by-arg=.
    if (VG_(clo_trace_children_skip_by_arg) && child_argv != NULL) {
       HChar const* last = VG_(clo_trace_children_skip_by_arg);
       while (*last) {

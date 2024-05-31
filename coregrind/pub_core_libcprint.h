@@ -54,7 +54,7 @@ typedef
       HChar *fsname_expanded; // 'fs' stands for file or socket
    }
    OutputSink;
- 
+
 /* And the destinations for normal and XML output. */
 extern OutputSink VG_(log_output_sink);
 extern OutputSink VG_(xml_output_sink);
@@ -75,6 +75,13 @@ extern void VG_(logging_atfork_child)(ThreadId tid);
    millisecond timer having been set to zero by an initial read in
    m_main during startup. */
 void VG_(elapsed_wallclock_time) ( /*OUT*/HChar* buf, SizeT bufsize );
+
+/* Get the current wallclock time into buf which has size
+   bufsize. The function will assert if bufsize is not large enough.
+   Upon return, buf will contain the zero-terminated wallclock time as
+   a string. */
+void VG_(wallclock_time) ( /*OUT*/HChar* buf, SizeT bufsize );
+
 
 /* Call this if the executable is missing.  This function prints an
    error message, then shuts down the entire system. */
